@@ -1,0 +1,62 @@
+name: Release tag
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  tag:
+    name: Create semver tag
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout full history and tags
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Create and push release tag
+        run: |
+          set -euo pipefail
+
+          if git tag --points-at "$GITHUB_SHA" | grep -Eq '^v[0-9]+\.[0-9]+\.[0-9]+$'; then
+            echo "HEAD already has a semver tag; skipping."
+            exit 0
+          fi
+
+          latest_tag="$(git tag --list 'v[0-9]*.[0-9]*.[0-9]*' --sort=-version:refname | head -n 1)"
+          if [ -z "$latest_tag" ]; then
+            next_tag="v1.0.0"
+          else
+            version="${latest_tag#v}"
+            major="${version%%.*}"
+            remainder="${version#*.}"
+            minor="${remainder%%.*}"
+            patch="${remainder#*.}"
+            bump="patch"
+
+            while IFS= read -r message; do
+              [ -n "$message" ] || continue
+              if printf '%s\n' "$message" | grep -Eq '(^|[[:space:]])BREAKING CHANGE:|^[a-zA-Z]+(\([^)]*\))?!:'; then
+                bump="major"
+                break
+              elif printf '%s\n' "$message" | grep -Eq '^feat(\([^)]*\))?:'; then
+                [ "$bump" = "major" ] || bump="minor"
+              fi
+            done < <(git log --format=%B "$latest_tag..$GITHUB_SHA")
+
+            case "$bump" in
+              major) major=$((major + 1)); minor=0; patch=0 ;;
+              minor) minor=$((minor + 1)); patch=0 ;;
+              patch) patch=$((patch + 1)) ;;
+            esac
+            next_tag="v${major}.${minor}.${patch}"
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a "$next_tag" "$GITHUB_SHA" -m "Release $next_tag"
+          git push origin "$next_tag"
