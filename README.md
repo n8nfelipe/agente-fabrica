@@ -31,6 +31,12 @@ pnpm dev
 
 O terminal interativo do eve permite conversar com o agente. Para alterar seu comportamento, edite `agent/instructions.md`; para ajustar o modelo, consulte `agent/agent.ts`.
 
+## Memória de longo prazo
+
+O agente mantém preferências estáveis e fatos duráveis por principal autenticado. Em desenvolvimento local, os dados ficam em `.eve/memory.sqlite`; na Vercel, `fileMemory` usa o Blob privado configurado para o projeto. Para provisionar ou reparar essa conexão, execute `pnpm exec eve integration setup file-memory` e faça um novo deploy após alterações nas variáveis do projeto.
+
+O modelo pode salvar e remover memórias com as ferramentas da memória. Não armazene senhas, tokens, dados de pagamento, chaves privadas ou códigos de uso único. Memórias recuperadas são tratadas como dados do usuário, não como instruções.
+
 ## Testes de comportamento (evals)
 
 Os evals em `evals/` exercitam o agente por meio de sessões reais do eve. Há cenários para uma resposta básica, consulta ao Context7 e delegação aos especialistas. Como usam o modelo configurado, precisam de credenciais válidas desse modelo.
@@ -68,6 +74,8 @@ agent/
   subagents/                  especialistas frontend, backend e requisitos
   sandbox/                    ambiente Docker isolado para execução
   channels/                   canal HTTP do eve e autenticação
+  memory/profile.ts           memória durável por principal
+  lib/sqlite-memory-backend.ts armazenamento SQLite usado localmente
   instrumentation/            exportação de traces para Langfuse
   extensions/                 extensão de automodificação local
 evals/                         testes de comportamento do agente
