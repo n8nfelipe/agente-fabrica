@@ -15,17 +15,19 @@
     "typecheck": "tsc"
   },
   "dependencies": {
+    "@langfuse/otel": "^6.0.2",
     "@vercel/connect": "2.5.2",
+    "@vercel/otel": "^2.1.4",
     "ai": "^7.0.137",
     "eve": "^0.90.0",
     "zod": "4.5.4"
   },
   "devDependencies": {
     "@types/node": "24.x",
+    "just-bash": "^3.6.0",
     "typescript": "7.0.2"
   },
   "engines": {
     "node": "24.x"
   }
-
 }

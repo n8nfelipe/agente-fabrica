@@ -1,10 +1,39 @@
-node_modules
-.env*
-.eve
-.vercel
-.next
-.output
-.nitro
-dist
-.DS_Store
+# Dependências
+node_modules/
+
+# Variáveis de ambiente e segredos locais
+.env
+.env.*
+!.env.example
+!.env.*.example
+.aws/
+*.pem
+*.key
+
+# Estado e configuração local do eve e da Vercel
+.eve/
+.vercel/
+.agents/
+.codex/
+
+# Saídas de build e cobertura
+dist/
+build/
+coverage/
+.next/
+.output/
+.nitro/
+
+# Logs, caches e resultados temporários
+*.log
 *.tsbuildinfo
+.cache/
+.turbo/
+test-results/
+playwright-report/
+
+# Arquivos locais do sistema operacional e editores
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
