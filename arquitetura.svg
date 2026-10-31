@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1120" viewBox="0 0 1600 1120" role="img" aria-labelledby="title desc">
+  <title id="title">Arquitetura do projeto meu-agente</title>
+  <desc id="desc">Diagrama da arquitetura do agente eve, seus especialistas, memória, sandbox, integrações externas, observabilidade e avaliações.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f8fafc"/><stop offset="1" stop-color="#eef2ff"/></linearGradient>
+    <linearGradient id="main" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#4338ca"/><stop offset="1" stop-color="#6d5ce8"/></linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="7" stdDeviation="9" flood-color="#23304a" flood-opacity=".09"/></filter>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0 10 5 0 10Z" fill="#8290a8"/></marker>
+    <marker id="arrowLight" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0 10 5 0 10Z" fill="#b7c0d0"/></marker>
+    <style>
+      text{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;fill:#172033}
+      .title{font-size:34px;font-weight:750;letter-spacing:-.7px}.sub{font-size:15px;fill:#667085}
+      .group{font-size:12px;font-weight:750;letter-spacing:1.3px;fill:#68758b}
+      .h{font-size:17px;font-weight:700}.p{font-size:13px;fill:#68758b}.small{font-size:12px;fill:#667085}
+      .card{fill:#fff;stroke:#e2e8f0;stroke-width:1.3;rx:15;filter:url(#shadow)}
+      .line{fill:none;stroke:#8290a8;stroke-width:2;marker-end:url(#arrow)}
+      .optional{fill:none;stroke:#a8b2c3;stroke-width:1.8;stroke-dasharray:7 7;marker-end:url(#arrowLight)}
+      .icon{font-size:20px}
+    </style>
+  </defs>
+  <rect width="1600" height="1120" fill="url(#bg)"/>
+  <text x="72" y="76" class="title">Arquitetura do meu-agente</text>
+  <text x="72" y="106" class="sub">Agente de uso geral construído com eve · componentes e integrações</text>
+  <rect x="1284" y="54" width="244" height="34" rx="17" fill="#e8eaff"/>
+  <circle cx="1304" cy="71" r="5" fill="#5b55db"/><text x="1318" y="76" class="small" fill="#4338ca">runtime eve · Node.js 24+</text>
+
+  <!-- Fluxo principal -->
+  <rect x="56" y="145" width="1488" height="280" rx="22" fill="#f1f3ff" stroke="#dfe3ff"/>
+  <text x="82" y="178" class="group">FLUXO PRINCIPAL</text>
+  <rect x="88" y="222" width="190" height="112" rx="16" class="card"/>
+  <text x="112" y="260" class="icon">👤</text><text x="112" y="291" class="h">Usuário</text><text x="112" y="314" class="p">solicitação</text>
+
+  <rect x="352" y="222" width="230" height="112" rx="16" class="card"/>
+  <text x="376" y="260" class="icon">🔐</text><text x="376" y="291" class="h">Canal eve</text><text x="376" y="314" class="p">OIDC · local · placeholder</text>
+
+  <rect x="672" y="204" width="310" height="148" rx="20" fill="url(#main)" filter="url(#shadow)"/>
+  <text x="700" y="244" font-size="12" font-weight="750" letter-spacing="1.2" fill="#d9d7ff">ORQUESTRADOR</text>
+  <text x="700" y="280" font-size="22" font-weight="750" fill="#fff">Agente principal</text>
+  <text x="700" y="307" font-size="13" fill="#e6e4ff">ChatGPT · raciocínio alto</text>
+  <text x="700" y="329" font-size="12" fill="#e6e4ff">agent.ts + instructions.md</text>
+
+  <rect x="1080" y="222" width="385" height="112" rx="16" class="card"/>
+  <text x="1106" y="260" class="icon">💬</text><text x="1140" y="260" class="h">Resposta ao usuário</text>
+  <text x="1106" y="293" class="p">Resultado, orientação ou trabalho delegado</text>
+  <text x="1106" y="315" class="p">conforme as instruções do agente</text>
+  <path d="M278 278H344" class="line"/><path d="M582 278H664" class="line"/><path d="M982 278H1072" class="line"/>
+
+  <!-- Capacidades -->
+  <rect x="56" y="458" width="950" height="380" rx="22" fill="#f8fafc" stroke="#e2e8f0"/>
+  <text x="82" y="491" class="group">CAPACIDADES ACESSÍVEIS AO AGENTE</text>
+  <path d="M827 352V434H528V450" class="line"/>
+  <rect x="84" y="526" width="274" height="126" rx="16" class="card"/>
+  <rect x="84" y="526" width="6" height="126" rx="3" fill="#08a88a"/>
+  <text x="108" y="562" class="h">Memória por usuário</text><text x="108" y="588" class="p">Preferências e fatos duráveis</text><text x="108" y="612" class="p">escopo isolado por principal</text>
+  <rect x="112" y="628" width="86" height="19" rx="9" fill="#e4f7f1"/><text x="122" y="642" font-size="10" font-weight="700" fill="#087b67">MEMÓRIA</text>
+
+  <rect x="390" y="526" width="274" height="126" rx="16" class="card"/>
+  <rect x="390" y="526" width="6" height="126" rx="3" fill="#e09b2d"/>
+  <text x="414" y="562" class="h">Context7</text><text x="414" y="588" class="p">Documentação atual e exemplos</text><text x="414" y="612" class="p">para bibliotecas e serviços</text>
+  <rect x="418" y="628" width="115" height="19" rx="9" fill="#fff3d9"/><text x="428" y="642" font-size="10" font-weight="700" fill="#9a6410">DOCUMENTAÇÃO</text>
+
+  <rect x="696" y="526" width="274" height="126" rx="16" class="card"/>
+  <rect x="696" y="526" width="6" height="126" rx="3" fill="#73839b"/>
+  <text x="720" y="562" class="h">Sandbox Docker</text><text x="720" y="588" class="p">Workspace isolado por sessão</text><text x="720" y="612" class="p">execução e arquivos no contêiner</text>
+  <rect x="724" y="628" width="89" height="19" rx="9" fill="#edf1f6"/><text x="734" y="642" font-size="10" font-weight="700" fill="#56657b">ISOLAMENTO</text>
+  <path d="M827 352V480H221V518" class="optional"/><path d="M827 352V480H527V518" class="optional"/><path d="M827 352V480H833V518" class="optional"/>
+
+  <!-- Especialistas -->
+  <rect x="1040" y="458" width="504" height="380" rx="22" fill="#f4fbf8" stroke="#d9eee6"/>
+  <text x="1066" y="491" class="group">DELEGAÇÃO ESPECIALIZADA</text>
+  <path d="M827 352V438H1292V450" class="line"/>
+  <rect x="1070" y="526" width="444" height="78" rx="15" class="card"/>
+  <circle cx="1102" cy="565" r="18" fill="#e9e7ff"/><text x="1096" y="572" font-size="17">✦</text>
+  <text x="1134" y="559" class="h">Frontend</text><text x="1134" y="582" class="p">Interface · acessibilidade · web search/fetch</text>
+  <rect x="1070" y="621" width="444" height="78" rx="15" class="card"/>
+  <circle cx="1102" cy="660" r="18" fill="#e2f4ff"/><text x="1096" y="667" font-size="17">⌘</text>
+  <text x="1134" y="654" class="h">Backend</text><text x="1134" y="677" class="p">Implementação · testes · segurança · Context7</text>
+  <rect x="1070" y="716" width="444" height="78" rx="15" class="card"/>
+  <circle cx="1102" cy="755" r="18" fill="#fff1dc"/><text x="1096" y="762" font-size="17">≋</text>
+  <text x="1134" y="749" class="h">Requisitos</text><text x="1134" y="772" class="p">Fluxos · regras · exceções · especificações em docs/</text>
+  <path d="M1292 450V516" class="line"/>
+
+  <!-- Infra e suporte -->
+  <rect x="56" y="870" width="1488" height="188" rx="22" fill="#fff" stroke="#e2e8f0"/>
+  <text x="82" y="904" class="group">PERSISTÊNCIA · OBSERVABILIDADE · QUALIDADE</text>
+  <path d="M221 652V854H272V862" class="optional"/>
+  <rect x="84" y="930" width="440" height="90" rx="14" fill="#f0fdfa" stroke="#ccefe6"/>
+  <text x="108" y="964" class="h">Armazenamento da memória</text><text x="108" y="990" class="p">Local: SQLite em .eve/ · Vercel: Blob privado</text>
+  <rect x="580" y="930" width="440" height="90" rx="14" fill="#f5f3ff" stroke="#e4dcff"/>
+  <text x="604" y="964" class="h">OpenTelemetry → Langfuse</text><text x="604" y="990" class="p">Traces do agente; envio depende de credenciais</text>
+  <rect x="1076" y="930" width="440" height="90" rx="14" fill="#eff6ff" stroke="#d8e7ff"/>
+  <text x="1100" y="964" class="h">Evals em evals/</text><text x="1100" y="990" class="p">Sessões reais · reporter opcional para Langfuse</text>
+  <path d="M800 352V916H800V922" class="optional"/>
+  <path d="M800 916H1296V922" class="optional"/>
+  <path d="M524 975H570" class="optional"/>
+  <text x="82" y="1088" class="small">Linhas contínuas: fluxo principal e delegação · Linhas tracejadas: uso condicional ou integração opcional</text>
+</svg>
