@@ -13,6 +13,23 @@ O agente consulta Context7 para documentação atual de bibliotecas e serviços.
 
 A extensão de automodificação local está configurada, mas desativada (`enabled: false`).
 
+## Arquitetura e componentes
+
+![Diagrama arquitetural do projeto meu-agente](./arquitetura.svg)
+
+- **Runtime eve:** compila e executa o agente. Os comandos de desenvolvimento, build, avaliação e deploy estão definidos em `package.json`.
+- **Canal eve:** recebe as solicitações e aplica os métodos de autenticação configurados para Vercel e desenvolvimento local. A autenticação placeholder não permite requisições de navegador em produção.
+- **Agente principal:** combina o modelo ChatGPT configurado em `agent/agent.ts` com as regras de comportamento e autorização de `agent/instructions.md`. Ele responde ao usuário e coordena o uso dos demais componentes.
+- **Especialistas:** `frontend_specialist` apoia tarefas de interface; `backend_specialist`, tarefas de backend; e `requirements_specialist`, análise e especificação de requisitos. O agente principal os consulta conforme as instruções do projeto.
+- **Context7:** conexão usada para consultar documentação técnica atual. O especialista backend tem sua própria configuração da conexão.
+- **Ferramentas web:** o especialista frontend pode pesquisar na web com Exa e ler páginas com `web_fetch`.
+- **Memória durável:** guarda preferências e fatos úteis por principal autenticado. Usa SQLite localmente e Blob privado na Vercel; o escopo por usuário é configurado em `agent/memory/profile.ts`.
+- **Sandbox Docker:** oferece um workspace isolado por sessão para execução de comandos e manipulação de arquivos, conforme `agent/sandbox/sandbox.ts`.
+- **Observabilidade:** a integração OpenTelemetry exporta traces para Langfuse quando as credenciais estão configuradas.
+- **Evals:** os cenários em `evals/` exercitam o agente em sessões eve. O reporter pode enviar os resultados ao Langfuse quando configurado.
+
+No diagrama, as linhas contínuas representam o fluxo principal e a delegação. As linhas tracejadas indicam capacidades condicionais ou integrações opcionais.
+
 ## Requisitos
 
 - Node.js 24 ou superior, conforme `package.json`.
